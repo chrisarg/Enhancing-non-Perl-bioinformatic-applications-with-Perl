@@ -1,0 +1,2 @@
+This is the source file for my preprint : [Enhancing non-Perl bioinformatic applications with Perl: Building novel, component based applications using Object Orientation, PDL, Alien, FFI, Inline and OpenMP](https://arxiv.org/abs/2406.10271),
+that was also the basis of my talk at #TPRC2024. The slides from the talk are available from  [slideshare](https://www.slideshare.net/slideshow/enhancing-non-perl-bioinformatic-applications-with-perl/269925371). 
