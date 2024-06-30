@@ -304,8 +304,8 @@ As shown in \Fref{lst:InvCDFWithPDL}, coding the actual inverse CDF calculation 
 \begin{lstlisting}[language=Perl,basicstyle=\footnotesize,frame=none,caption={The inverse CDF calculations in  PDL.},label={lst:InvCDFWithPDL},captionpos=b]
     ## now simulate the truncated distribution
     my $simulated_values = $self->random($random_dim);
-    $simulated_values->inplace->mult($domain_lengh_trunc_distr);
-    $simulated_values->inplace->plus($cdf_val_at_left_trunc_lmt);
+    $simulated_values *= $domain_length_trunc_distr;
+    $simulated_values += $cdf_val_at_left_trunc_lmt;
     return $self->inv_cdf( $distr, $simulated_values, $params );
 \end{lstlisting}
 
@@ -487,7 +487,7 @@ $pdl_c_index .= -2;
 my $score      = cumusumover($pdl_s);
 my $max_index  = $score->maximum_ind;
 my $best_index = $n - $max_index - 1;
-if ( $score->at( $score->maximum_ind ) < 0.4 * ( $max_index + 1 ) ) {
+if ( $score->at( $max_index ) < 0.4 * ( $max_index + 1 ) ) {
     $best_index = $n;
 }
 $s = substr $s, 0, $best_index;
@@ -743,7 +743,7 @@ around qw(
     my $orig = shift;
     my $self = shift;
     return sub {
-        return $self->$orig->( $self, @_ );
+        return $self->$orig( @_ );
     };
 \end{lstlisting}
 \end{minipage}
@@ -1101,7 +1101,7 @@ sub simulate_trunc {
         $cdf_val_at_right_trunc_lmt =
           $self->cdf( $distr, $right_trunc_lmt, $params );
     }
-    my $domain_lengh_trunc_distr =
+    my $domain_length_trunc_distr =
       $cdf_val_at_right_trunc_lmt - $cdf_val_at_left_trunc_lmt;
 
     ## now simulate the truncated distribution
@@ -1117,7 +1117,7 @@ sub simulate_trunc {
     my $num_rand_values  = scalar $simulated_values->@*;
     for my $i ( 0 .. $num_rand_values - 1 ) {
         $simulated_values->[$i] =
-          $simulated_values->[$i] * $domain_lengh_trunc_distr +
+          $simulated_values->[$i] * $domain_length_trunc_distr +
           $cdf_val_at_left_trunc_lmt;
         $simulated_values->[$i] =
           $self->inv_cdf( $distr, $simulated_values->[$i], $params );
